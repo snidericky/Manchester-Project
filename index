@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manchester City Centre Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([53.4808, -2.2426], 14);
+
+    // Base layers
+    var streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains:['mt0','mt1','mt2','mt3'],
+      attribution: 'Imagery © Google'
+    });
+
+    // Layer control
+    L.control.layers({ 'Streets': streetLayer, 'Satellite': satelliteLayer }).addTo(map);
+
+    // Landmarks
+    var landmarks = [
+      { name: 'Manchester Town Hall', coords: [53.4794, -2.2453] },
+      { name: 'Manchester Cathedral', coords: [53.4858, -2.2446] },
+      { name: 'Manchester Arndale', coords: [53.4835, -2.2414] },
+      { name: 'Piccadilly Gardens', coords: [53.4810, -2.2374] },
+      { name: 'Manchester Piccadilly Station', coords: [53.4774, -2.2304] },
+      { name: 'Manchester Victoria Station', coords: [53.4875, -2.2420] },
+      { name: 'AO Arena', coords: [53.4882, -2.2428] },
+      { name: 'Science and Industry Museum', coords: [53.4766, -2.2534] },
+      { name: 'Deansgate Station', coords: [53.4749, -2.2516] }
+    ];
+
+    landmarks.forEach(function(l) {
+      L.marker(l.coords).addTo(map).bindPopup(l.name);
+    });
+
+    // District polygons (approximate)
+    var districts = [
+      {
+        name: 'Northern Quarter',
+        coords: [
+          [53.4839, -2.2359], [53.4853, -2.2385], [53.4847, -2.2424],
+          [53.4828, -2.2433], [53.4823, -2.2388]
+        ]
+      },
+      {
+        name: 'Spinningfields',
+        coords: [
+          [53.4796, -2.2549], [53.4808, -2.2524], [53.4801, -2.2489],
+          [53.4788, -2.2497], [53.4782, -2.2529]
+        ]
+      },
+      {
+        name: 'Chinatown',
+        coords: [
+          [53.4797, -2.2399], [53.4803, -2.2389], [53.4798, -2.2378],
+          [53.4791, -2.2384]
+        ]
+      }
+    ];
+
+    districts.forEach(function(d) {
+      L.polygon(d.coords, { weight: 2 }).addTo(map).bindPopup(d.name);
+    });
+    });
+  </script>
+</body>
+</html>
